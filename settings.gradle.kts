@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyBtcTracker"
 include(":app")
- 
+include(":data")
+include(":domain")
+include(":presentation")
