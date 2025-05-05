@@ -12,7 +12,11 @@ class MainScreenReducer :
         data class UpdateLoading(val isLoading: Boolean) : MainScreenEvent()
         data class UpdateBtcBalanceLoading(val isLoading: Boolean) : MainScreenEvent()
         data class UpdateBtcRateLoading(val isLoading: Boolean) : MainScreenEvent()
-        data class UpdateTransactions(val transactions: List<Transaction>) : MainScreenEvent()
+        data class UpdateTransactions(
+            val transactions: List<Transaction>,
+            val isFirstPage: Boolean
+        ) : MainScreenEvent()
+
         data class UpdateTransactionsLoading(val isLoading: Boolean) : MainScreenEvent()
         data class UpdateBtcRate(val rate: BitcoinRate) : MainScreenEvent()
         data class UpdateBtcBalance(val balance: String) : MainScreenEvent()
@@ -20,14 +24,15 @@ class MainScreenReducer :
 
     @Immutable
     sealed class MainScreenEffect : Reducer.ViewEffect {
-        data class NavigateToTopic(val topicId: String) : MainScreenEffect()
-        data class NavigateToNews(val newsUrl: String) : MainScreenEffect()
+        data class DisplayAddTransactionScreen(val isVisible: Boolean) : MainScreenEffect()
+        data class DisplayRefillDialog(val isVisible: Boolean) : MainScreenEffect()
     }
 
     @Immutable
     data class MainScreenState(
         val isBitcoinRateLoading: Boolean,
         val isBalanceLoading: Boolean,
+        val isRefillDialogVisible: Boolean,
         val isTransactionsLoading: Boolean,
         val transactions: List<Transaction>,
         val bitcoinRate: BitcoinRate,
@@ -35,24 +40,14 @@ class MainScreenReducer :
     ) : Reducer.ViewState {
         companion object {
             fun initial(): MainScreenState {
-                val transactions = listOf(
-                    Transaction.fake(),
-                    Transaction.fake(),
-                    Transaction.fake(),
-                    Transaction.fake(),
-                    Transaction.fake(),
-                    Transaction.fake(),
-                    Transaction.fake(),
-                    Transaction.fake()
-                ).distinctBy { it.date }
-
                 return MainScreenState(
                     isBalanceLoading = true,
                     isBitcoinRateLoading = true,
                     isTransactionsLoading = false,
-                    transactions = transactions,
+                    isRefillDialogVisible = false,
+                    transactions = emptyList(),
                     bitcoinRate = BitcoinRate.fake(),
-                    bitcoinBalance = "0"
+                    bitcoinBalance = "0.0"
                 )
             }
         }
@@ -76,7 +71,13 @@ class MainScreenReducer :
             }
 
             is MainScreenEvent.UpdateTransactions -> {
-                previousState.copy(transactions = event.transactions) to null
+                val list = if (event.isFirstPage) {
+                    event.transactions
+                } else {
+                    previousState.transactions + event.transactions
+                }
+
+                previousState.copy(transactions = list, isTransactionsLoading = false) to null
             }
 
             is MainScreenEvent.UpdateTransactionsLoading -> {

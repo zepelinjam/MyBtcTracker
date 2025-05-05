@@ -217,7 +217,7 @@ fun MyBtcTrackerTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = ComposeMVITypography,
+            typography = MyBtcTrackerTypography,
             content = content,
         )
     }

@@ -17,7 +17,7 @@ class MainDataUseCase @Inject constructor(
     private val transactionsRepository: TransactionsRepository,
     private val bitcoinRatesRepository: BitcoinRatesRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
-) : FlowUseCase<Unit, MainDataUseCase.MainDataSuccess, MainDataUseCase.MainDataErrors>(dispatcher) {
+) : FlowUseCase<Int, MainDataUseCase.MainDataSuccess, MainDataUseCase.MainDataErrors>(dispatcher) {
 
     sealed class MainDataErrors {
         data object NoTransactionsFound : MainDataErrors()
@@ -27,14 +27,16 @@ class MainDataUseCase @Inject constructor(
     sealed class MainDataSuccess {
         data class TransactionsData(val transactions: List<Transaction>) : MainDataSuccess()
         data class BitcoinRateData(val bitcoinRates: BitcoinRate) : MainDataSuccess()
+        data class CurrentBalance(val balance: String) : MainDataSuccess()
     }
 
-    override fun execute(parameters: Unit): Flow<Result<MainDataSuccess, MainDataErrors>> {
+    override fun execute(parameters: Int): Flow<Result<MainDataSuccess, MainDataErrors>> {
         return flow {
             emit(Result.Loading)
 
-            val transactionsResult = transactionsRepository.getTransactionsList()
+            val transactionsResult = transactionsRepository.getTransactionsList(offset = parameters)
             val bitcoinRatesResult = bitcoinRatesRepository.getLatestBitcoinRate()
+            val bitcoinBalanceResult = transactionsRepository.getBalance()
 
             when (transactionsResult) {
                 is DataResult.Error -> when (transactionsResult.error) {
@@ -43,13 +45,18 @@ class MainDataUseCase @Inject constructor(
                 }
 
                 is DataResult.Success -> emit(
-                    Result.Success(
-                        MainDataSuccess.TransactionsData(
-                            transactionsResult.data //.mapToFollowableTopic(
-                                //UserData.fake()
-                            //)
-                        )
-                    )
+                    Result.Success(MainDataSuccess.TransactionsData(transactionsResult.data))
+                )
+            }
+
+            when (bitcoinBalanceResult) {
+                is DataResult.Error -> when (bitcoinBalanceResult.error) {
+                    TransactionsRepository.TransactionsRepositoryError.UnknownError ->
+                        emit(Result.BusinessRuleError(MainDataErrors.NoTransactionsFound))
+                }
+
+                is DataResult.Success -> emit(
+                    Result.Success(MainDataSuccess.CurrentBalance(bitcoinBalanceResult.data))
                 )
             }
 
@@ -60,13 +67,7 @@ class MainDataUseCase @Inject constructor(
                 }
 
                 is DataResult.Success -> emit(
-                    Result.Success(
-                        MainDataSuccess.BitcoinRateData(
-                            bitcoinRatesResult.data //.mapToUserNewsResources(
-                                // UserData.fake()
-                            //)
-                        )
-                    )
+                    Result.Success(MainDataSuccess.BitcoinRateData(bitcoinRatesResult.data))
                 )
             }
         }

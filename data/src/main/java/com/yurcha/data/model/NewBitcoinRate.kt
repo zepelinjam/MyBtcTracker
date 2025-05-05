@@ -2,10 +2,10 @@ package com.yurcha.data.model
 
 import com.squareup.moshi.JsonClass
 import com.yurcha.domain.model.BitcoinRate
-import kotlinx.datetime.Instant
-import java.text.SimpleDateFormat
+import com.yurcha.domain.utils.defScale
+import com.yurcha.domain.utils.toDateFormat
+import com.yurcha.domain.utils.toDateTimeFormat
 import java.util.Date
-import java.util.Locale
 
 @JsonClass(generateAdapter = true)
 data class NewBitcoinRate(
@@ -20,7 +20,7 @@ data class Data(
     val symbol: String,
     val name: String,
     val supply: String,
-    val maxSupply: Instant,
+    val maxSupply: String,
     val marketCapUsd: String,
     val volumeUsd24Hr: String,
     val priceUsd: String,
@@ -29,9 +29,8 @@ data class Data(
     val explorer: String,
 )
 
-
 fun NewBitcoinRate.toDomain() = BitcoinRate(
     currency = data.symbol,
-    currentPrice = data.priceUsd,
-    lastUpdated = Date()
+    currentPrice = data.priceUsd.defScale(),
+    lastUpdated = Date().toDateTimeFormat()
 )

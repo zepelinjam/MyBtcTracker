@@ -1,6 +1,5 @@
 [versions]
 accompanist = "0.34.0"
-agp = "8.4.0"
 browser = "1.8.0"
 coil = "2.6.0"
 kotlin = "1.9.24"
@@ -14,7 +13,6 @@ lifecycle = "2.7.0"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 appcompat = "1.6.1"
-material = "1.12.0"
 metricsPerformance = "1.0.0-beta01"
 androidxHiltNavigationCompose = "1.2.0"
 hilt = "2.51"
@@ -73,7 +71,6 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version = "8.3.1" }

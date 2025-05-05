@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">presentation</string>
+    <string name="select_category">Select Category:</string>
+    <string name="enter_amount">Enter amount (BTC)</string>
+    <string name="refill_amount">Refill amount (BTC)</string>
+    <string name="add_new_transaction">Add New Transaction</string>
+    <string name="your_balance">Your balance: %1$s BTC</string>
+    <string name="current_btc_price">BTC price: %1$s\n(%2$s)</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

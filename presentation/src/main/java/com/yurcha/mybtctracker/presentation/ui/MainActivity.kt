@@ -18,7 +18,6 @@ public class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-
             MyBtcTrackerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainScreen(
@@ -27,7 +26,6 @@ public class MainActivity : ComponentActivity() {
                     )
                 }
             }
-
         }
     }
 }

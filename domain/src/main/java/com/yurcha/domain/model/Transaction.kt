@@ -1,7 +1,5 @@
 package com.yurcha.domain.model
 
-import kotlin.random.Random
-import kotlinx.datetime.toDatePeriod
 import java.util.Date
 
 /**

@@ -13,5 +13,5 @@ interface BitcoinRateDao {
     suspend fun insertNewRate(rateEntity: BitcoinRateEntity)
 
     @Query("SELECT * FROM bitcoin_rates WHERE currency = :currency LIMIT 1")
-    suspend fun getLatestRate(currency: String = "USD"): BitcoinRateEntity?
+    suspend fun getLatestRate(currency: String = "BTC"): BitcoinRateEntity?
 }
