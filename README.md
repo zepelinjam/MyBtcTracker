@@ -18,7 +18,7 @@
 🇬🇧 
 Expense Tracking Test Project 💸
 
-This project is a test task aimed at creating an expense tracking application that allows users to refill the balance and record the expenses. Each user can hold their balance in Bitcoins and make transactions from this balance.
+This project is a test task aimed at creating an expense tracking application that allows users to refill the balance and record the expenses. User can hold their balance in Bitcoins and make transactions from this balance.
 
 Technical Requirements:
 
@@ -28,4 +28,4 @@ Use of database caching.
 
 Architecture is at the developer's discretion.
 
-Design is at the developer's discretion 🎨.
+Design is at the developer's discretion.

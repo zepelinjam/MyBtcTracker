@@ -59,7 +59,13 @@ fun AddTransactionScreen(
 
         OutlinedTextField(
             value = amount,
-            onValueChange = { amount = it },
+            onValueChange = { newValue ->
+                // only 2 digits after the dot
+                val regex = Regex("^\\d*(\\.\\d{0,2})?$")
+                if (newValue.matches(regex)) {
+                    amount = newValue
+                }
+            },
             label = { Text(stringResource(id = R.string.enter_amount)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
